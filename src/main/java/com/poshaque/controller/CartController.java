@@ -28,7 +28,7 @@ public class CartController {
 	}
 	
 	@GetMapping
-	public Cart getCart(@RequestParam int userId){
-		return cartService.getCart(userId);
+	public Cart getCart(@AuthenticationPrincipal UserPrincipal principal){
+		return cartService.getCart(principal.getId());
 	}
 }
