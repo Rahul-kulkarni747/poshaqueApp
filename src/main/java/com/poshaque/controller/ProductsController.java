@@ -1,5 +1,6 @@
 package com.poshaque.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.poshaque.model.ProductThumbnail;
 import com.poshaque.model.Products;
 import com.poshaque.service.ProductService;
 import com.poshaque.service.UserPrincipal;
@@ -48,6 +50,11 @@ public class ProductsController {
 	@GetMapping
 	public Map<String,Object> getProductById(@RequestParam Integer id, @AuthenticationPrincipal UserPrincipal principal){
 		return  productService.getProductById(id,principal);
+	}
+	
+	@GetMapping("/cart_thumbnails")
+	public List<ProductThumbnail> getCartThumbnails(@AuthenticationPrincipal UserPrincipal principal){
+		return productService.getCartThumbnails(principal);
 	}
 	
 }

@@ -1,20 +1,28 @@
 package com.poshaque.service;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.poshaque.dao.CartRepository;
 import com.poshaque.dao.ProductImageRepository;
 import com.poshaque.dao.ProductsRepository;
 import com.poshaque.dao.ReviewRepository;
 import com.poshaque.exception.PoshaqueBussinessException;
+import com.poshaque.model.Cart;
 import com.poshaque.model.ProductImages;
+import com.poshaque.model.ProductThumbnail;
 import com.poshaque.model.Products;
 
 @Service
@@ -25,9 +33,12 @@ public class ProductService {
 	
 	@Autowired
 	private ProductImageRepository productImageRepository;
-	
+
 	@Autowired
 	private ReviewRepository reviewRepository;
+	
+	@Autowired
+	private CartRepository cartRepository;
 
 	public Page<Products> getAllProducts(Pageable page, String searchTerm){
 		Page<Products> products = null;
@@ -67,6 +78,28 @@ public class ProductService {
 		Integer userReviewCount = reviewRepository.findUserReviewCount(id, principal.getId());
 		map.put("reviewDone", (userReviewCount > 0));
 		return map;
+	}
+
+	public List<ProductThumbnail> getCartThumbnails(UserPrincipal principal) {
+		Cart cart = cartRepository.findByUserId(principal.getId());
+		Set<Integer> prodIds = new HashSet<Integer>();
+		if(cart != null && cart.getCartData() != null){
+			String jsonData = cart.getCartData();
+			try {
+				JSONObject cartObj = new JSONObject(jsonData);
+				JSONObject prodObj = cartObj.getJSONObject("products");
+				Iterator<String> keys = prodObj.keys();
+				while(keys.hasNext()) {
+				    String key = keys.next();
+				    if (prodObj.get(key) instanceof JSONObject) {
+				    	prodIds.add(prodObj.getJSONObject(key).getInt("id"));
+				    }
+				}
+			} catch (JSONException e) {
+				throw new PoshaqueBussinessException("Invalid cart error.");
+			}
+		}
+		return productsRepository.findByIdIn(prodIds);
 	}
 
 }

@@ -31,6 +31,7 @@ public class Products {
 	public boolean isPriceDifferent;
 	public String priceSizeJson;
 	public String availableSizes;
+	public String productThumbnail;
 
 	public Products() {
 		super();
@@ -39,7 +40,7 @@ public class Products {
 
 	public Products(int id, String name, String productId, List<ProductImages> productImage, String image,
 			String description, int categoryId, String tags, int totalSold, int price, Date createdOn, boolean hasSizes,
-			boolean isGenderSpecific, boolean isPriceDifferent, String priceSizeJson, String availableSizes) {
+			boolean isGenderSpecific, boolean isPriceDifferent, String priceSizeJson, String availableSizes, String productThumbnail) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -57,6 +58,7 @@ public class Products {
 		this.isPriceDifferent = isPriceDifferent;
 		this.priceSizeJson = priceSizeJson;
 		this.availableSizes = availableSizes;
+		this.productThumbnail = productThumbnail;
 	}
 
 	public int getId() {
@@ -185,6 +187,14 @@ public class Products {
 
 	public void setAvailableSizes(String availableSizes) {
 		this.availableSizes = availableSizes;
+	}
+
+	public String getProductThumbnail() {
+		return productThumbnail;
+	}
+
+	public void setProductThumbnail(String productThumbnail) {
+		this.productThumbnail = productThumbnail;
 	}
 	
 }
